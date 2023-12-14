@@ -11,34 +11,35 @@ if ($conn->connect_error) {
 }
 
 // Pagination setup
-$itemsPerPage = 12; // Number of products per page
+$itemsPerPage = 24; // Number of products per page
 $page = isset($_GET['page']) ? intval($_GET['page']) : 1; // Current page number
 
 $query = $conn->prepare("SELECT * FROM products LIMIT ?, ?");
+$offset = ($page - 1) * $itemsPerPage;
 $query->bind_param("ii", $offset, $itemsPerPage);
 $query->execute();
 $result = $query->get_result();
-
 
 if ($result->num_rows > 0) {
     echo '<ul class="cards">';
     while ($row = $result->fetch_assoc()) {
         echo '<li class="card">';
-echo '<img src="' . htmlspecialchars($row["image url"]) . '" alt="' . htmlspecialchars($row["name"]) . '">';
+        echo '<img src="' . htmlspecialchars($row["image url"]) . '" alt="' . htmlspecialchars($row["name"]) . '">';
         echo '<h3>' . htmlspecialchars($row["name"]) . '</h3>';
         echo '<h4>' . htmlspecialchars($row["category"]) . '</h4>';
-        echo '<p>' . htmlspecialchars($row["price"]) . '</p>';        
-        
-        // Add to Cart button
-        echo '<form action="add_to_cart.php" method="post">';
+        echo '<p>' . htmlspecialchars($row["price"]) . '</p>';
+
+        // Add to Cart button with JavaScript function
+        echo '<form onsubmit="redirectToLogin(event);" method="post">';
         echo '<input type="hidden" name="product_id" value="' . $row["id"] . '">';
         echo '<button type="submit">View product</button>';
         echo '</form>';
-        
+
         echo '</li>';
     }
     echo '</ul>';
 }
+
 // Pagination buttons
 $query = "SELECT COUNT(*) AS total FROM products";
 $totalResult = $conn->query($query);
@@ -54,7 +55,14 @@ if ($page < $totalPages) {
 }
 echo '</div>';
 
+// JavaScript function to redirect to the login page
+echo '<script>
+    function redirectToLogin(event) {
+        event.preventDefault();
+        window.location.href = "login.php?redirect=product_list.php";
+    }
+</script>';
+
 // Close the database connection
 $conn->close();
 ?>
-

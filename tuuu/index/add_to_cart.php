@@ -1,33 +1,22 @@
 <?php
 session_start();
 
-// Check if the user is logged in
-if (!isset($_SESSION['user_id'])) {
-    echo "Not logged in";
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["product_id"])) {
+    $product_id = $_POST["product_id"];
+
+    // Initialize the cart if it doesn't exist
+    if (!isset($_SESSION["cart"])) {
+        $_SESSION["cart"] = array();
+    }
+
+    // Add the selected product to the cart
+    if (!in_array($product_id, $_SESSION["cart"])) {
+        $_SESSION["cart"][] = $product_id;
+    }
+
+    // Redirect back to the product list page
+    $redirect_url = isset($_GET['redirect']) ? $_GET['redirect'] : 'product_list.php';
+    header("Location: $redirect_url");
     exit();
 }
-
-require 'connection.php';
-
-$product_id = $_GET['product_id'];
-$user_id = $_SESSION['user_id'];
-
-// Check if the product is already in the cart
-$stmt = $conn->prepare("SELECT * FROM cart WHERE user_id = :user_id AND product_id = :product_id");
-$stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-$stmt->bindParam(':product_id', $product_id, PDO::PARAM_INT);
-$stmt->execute();
-
-if ($stmt->rowCount() > 0) {
-    echo "Product already in cart";
-    exit();
-}
-
-// Add the product to the cart
-$stmt = $conn->prepare("INSERT INTO cart (user_id, product_id, quantity) VALUES (:user_id, :product_id, 1)");
-$stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-$stmt->bindParam(':product_id', $product_id, PDO::PARAM_INT);
-$stmt->execute();
-
-echo "Product added to cart";
 ?>

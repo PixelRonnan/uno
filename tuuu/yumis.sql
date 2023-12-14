@@ -24,21 +24,6 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `carts`
---
-
-CREATE TABLE user_cart (
-    cart_id INT PRIMARY KEY AUTO_INCREMENT,
-    user_id INT,
-    product_id INT,
-    quantity INT DEFAULT 1,
-    FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (product_id) REFERENCES products(id)
-);
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `messages`
 --
 
@@ -252,18 +237,6 @@ INSERT INTO `users` (`id`, `email`, `password`, `username`) VALUES
 (12, 'king@gmail.com', '$2y$10$TggD5DG.OGxTEpwAIV6cH.ASzjRDDZ/LDWa7Nk5PBL98UZl9gf7pK', 'king ');
 
 --
--- Indexes for dumped tables
---
-
---
--- Indexes for table `carts`
---
-ALTER TABLE `carts`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `user_id` (`user_id`),
-  ADD KEY `product_id` (`product_id`);
-
---
 -- Indexes for table `messages`
 --
 ALTER TABLE `messages`
@@ -286,12 +259,6 @@ ALTER TABLE `users`
 --
 
 --
--- AUTO_INCREMENT for table `carts`
---
-ALTER TABLE `carts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `messages`
 --
 ALTER TABLE `messages`
@@ -312,13 +279,6 @@ ALTER TABLE `users`
 --
 -- Constraints for dumped tables
 --
-
---
--- Constraints for table `carts`
---
-ALTER TABLE `carts`
-  ADD CONSTRAINT `carts_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
-  ADD CONSTRAINT `carts_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

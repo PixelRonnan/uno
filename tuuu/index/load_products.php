@@ -14,7 +14,7 @@ try {
 
 
 // Pagination setup
-$itemsPerPage = 12;
+$itemsPerPage = 24;
 $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
 $offset = ($page - 1) * $itemsPerPage;
 
